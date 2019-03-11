@@ -453,11 +453,18 @@ public class frmVentas extends javax.swing.JFrame {
 
             Statement statement = conne.createStatement();
             ResultSet rs = statement.executeQuery(sSQL);
-            int nr = rs.getMetaData().getColumnCount();
+            int nr = 0;
+            while(rs.next()){
+                nr++;
+            }
             if (nr <= 0) {
                 JOptionPane.showMessageDialog(null, "No Se Encuentra El Codigo");
-
-                //sSQL = "select * from productos";
+                frmListadoArticulos fa = new frmListadoArticulos();
+                fa.setVisible(true);     
+                
+            }else{
+            //Statement statement = conne.createStatement();
+               rs = statement.executeQuery(sSQL);
             }
 
             if (rs.next() == true) {
@@ -475,9 +482,11 @@ public class frmVentas extends javax.swing.JFrame {
             rs.close();
             statement.close();
             conne.close();
+            
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "SQLException:\n" + e, "Error: Consultar(Productos)", JOptionPane.ERROR_MESSAGE);
         }
+        
     }//GEN-LAST:event_jTextField2FocusLost
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
