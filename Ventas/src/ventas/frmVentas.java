@@ -227,17 +227,18 @@ public class frmVentas extends javax.swing.JFrame {
                                 .addGap(110, 169, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(16, 16, 16)
-                                        .addComponent(jLabel3))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(30, 30, 30)
                                         .addComponent(jButton3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel9)))
+                                        .addComponent(jLabel9))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel3))))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jTextField5)
@@ -300,12 +301,13 @@ public class frmVentas extends javax.swing.JFrame {
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton3)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton4))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -525,18 +527,23 @@ public class frmVentas extends javax.swing.JFrame {
             pstm.setString(5, wfecha);
             pstm.executeUpdate();
             pstm.close();
-            String uSQL;
-             
+            String uSQL, ySQL;
+
             for (int i = 0; i < jTable1.getRowCount(); i++) {
-                    
+
                 uSQL = "INSERT INTO ventas_detalle VALUES(" + wnumfact + "," + jTable1.getValueAt(i, 0) + ","
                         + jTable1.getValueAt(i, 3) + "," + jTable1.getValueAt(i, 2) + "," + jTable1.getValueAt(i, 4) + ")";
-               PreparedStatement pstmu = conne.prepareStatement(uSQL);
+                PreparedStatement pstmu = conne.prepareStatement(uSQL);
                 pstmu.executeUpdate();
+
+                ySQL = "UPDATE productos set cantidad=cantidad-" + jTable1.getValueAt(i, 3) + " where codigo='" + jTable1.getValueAt(i, 0) + "'";
+                PreparedStatement pstmy = conne.prepareStatement(ySQL);
+                pstmy.executeUpdate();
+
+                pstmy.close();
                 pstmu.close();
             }
-            
-            
+
             conne.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "SQLException:\n" + e, "Error: Insertar(Ventas_Encabezado)", JOptionPane.ERROR_MESSAGE);
